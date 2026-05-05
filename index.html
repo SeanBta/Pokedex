@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="height=device-height, initial-scale=1.0">
+  <title>Pokedex</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="./img/pokeball.png" type="image/x-icon">
+</head>
+<body onload="start();">
+  <header class="header">
+    <div class="left-header">
+      <img src="./img/pokeball.png" class="header-img">
+      <a href="">Home</a>
+    </div>
+        <div class="queryContainer">
+          <button class="button" onclick="resetPokemon(1,20)">Reset</button>
+          <input placeholder="Nach Pokemon suchen" type="text" id="input" min-length="3" required>
+          <button class="button" type="button" onclick="searchPokemon('input')">Search</button>
+        </div>
+  </header>
+  <div class="pokemonContainer">
+    <dialog id="dialog" class="dialog"  onclick="closeDialog(event)">
+      <div id="dialogContainer" class="innerContainerDialog" onclick="event.stopPropagation()">
+      </div>
+
+    </dialog>
+    <div id="showcase" class="gridContainer">
+      </div>
+      <button id="loadBtn" style="font-size: 40px"onclick="loadMorePokemon()">↓</button>
+      <div id="spinner" class="spinner hidden"></div>
+  </div>
+  <footer class="footer">
+    <div>
+      Developer Akademie
+    </div>
+    <div>
+      Sean Boutabba
+    </div>
+  </footer>
+  <!-- <script src="promise.js"></script> -->
+   
+</body>
+<script src="pokeapi.js"></script>
+</html>
