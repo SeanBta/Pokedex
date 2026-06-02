@@ -427,10 +427,10 @@ function searchDialogShowNextImg(index) {
 
 function dialogShowPreviousImg(index){
   if(index > 1){
-    openPornDialog(index -1);
+    openDialog(index -1);
   }
   else{
-    openPornDialog(8);
+    openDialog(8);
   }
 }
 
