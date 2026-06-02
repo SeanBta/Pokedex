@@ -171,6 +171,22 @@ async function getTestData(index) {
    }
 }
 
+async function regularFetch(cache, url, index){
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error("Fehler beim Fetch");
+    }
+    //The response needs to be cloned, since it can only be read once.
+    await cache.put(url, response.clone());
+    console.log("Neu von API geladen");
+    const data = await response.json();
+    return await getData(data, index);
+  } catch (error) {
+    console.error("Error:", error);
+  }
+}
+
 //Returns all the Data of each Pokemon
 async function getData(index){
   const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${index}/`);
