@@ -50,6 +50,13 @@ body{
   align-items: center;
   flex-direction: column;
 }
+.frontPage{
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
 .header{
   display: flex;
   justify-content: space-around;
@@ -59,9 +66,14 @@ body{
   font-size: 24px;
   color: white;
   background-color: rgba(4, 4, 102, 0.747);
-  position: sticky;
-  top: 0;
-  z-index: 9999;
+}
+.innerHeader{
+  width: 100%;
+  max-width: 1920px;
+  height: 100%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
 }
 .left-header{
   width: 50%;
@@ -93,6 +105,7 @@ a:hover{
 
 .dialog{
   width: 70%;
+  max-width: 1920px;
   border: none;
   padding: 0;
 }
@@ -161,6 +174,7 @@ a:hover{
 }
 
 .pokemonContainer{
+  flex: 1;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -214,7 +228,10 @@ p{
   transition: transform 0.3s ease;
   animation: translate-x(45%);
 }
-
+.loadBtn{
+  font-size: 40px;
+  margin: 20px;
+}
 .Bug{
   background-color:rgb(1, 73, 1);
 }
@@ -226,6 +243,7 @@ p{
 .relative{
   position: relative;
   width: 100%;
+  max-width: 1920px;
   height: 100%;
   display: flex;
   justify-content: center;
@@ -244,15 +262,23 @@ p{
 }
 .footer{
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
   align-items: center;
-  font-size: 24px;
   color: white;
   background-color: rgba(4, 4, 102, 0.747);
   height: 140px;
   width: 100%;
 }
-
+.innerFooterContainer{
+  height: 100%;
+  max-width: 1920px;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  text-align: center;
+  font-size: 24px;
+}
 
 /* Single Types */
 .normal{
@@ -342,6 +368,10 @@ p{
    background: radial-gradient(circle, #A040A0 20%, brown 80%);
 }
 
+.dual-electric-flying{
+   background: radial-gradient(circle, #F8D030 20%, brown 80%);
+}
+
 .dual-bug-grass{
    background: radial-gradient(circle, #A8B820 20%, #78C850 80%);
 }
@@ -420,19 +450,18 @@ p{
     top: 50%;
   }
 }
-@media(max-width: 500px){
-  .header{
+@media(max-width: 700px){
+  .innerHeader{
     flex-direction: column;
   }
-
   .left-header{
     justify-content: center;
   }
-
   .header-img{
     width: 50px;
   }
-
+}
+@media(max-width: 500px){
   .gridContainer{
     grid-template-columns: repeat(1, 1fr);
   }
