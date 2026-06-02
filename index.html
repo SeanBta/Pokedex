@@ -17,7 +17,7 @@
         <div class="queryContainer">
           <button class="button" onclick="resetPokemon(1,20)">Reset</button>
           <input placeholder="Nach Pokemon suchen" type="text" id="input" min-length="3" required>
-          <button class="button" type="button" onclick="searchPokemon('input')">Search</button>
+          <button class="button" type="button" onclick="searchForPokemon(document.getElementById('input'.value))">Search</button>
         </div>
   </header>
   <div class="pokemonContainer" id="pokemonContainerRef">
