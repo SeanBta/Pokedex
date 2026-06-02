@@ -290,17 +290,25 @@ function getTypeClass(types) {
 function createPokemonHTML(data){
   const typeClass = getTypeClass(data.typesArray);
   return `
-    <div id="${data.index}" class="pokemon ${typeClass}">
-      <img loading="lazy"
-        src="${data.img}"
-        class="img" 
-        onclick="openDialog(${data.index})">
+    <div id="${data.index}" onclick="openDialog(${data.index})" class="pokemon ${typeClass}">
+      <img loading="lazy" src="${data.img}" class="img">
       <p>${data.name}</p>
-       <p>Type: ${data.typesArray.join(", ")}</p>
-       </div>
+      <p>Type: ${data.typesArray.join(", ")}</p>
+    </div>
   `;
-  
 }
+
+function createPokemonHTML2(data){
+  const typeClass = getTypeClass(data.typesArray);
+  return `
+    <div id="${data.index}" onclick="openSearchDialog(${data.index})" class="pokemon ${typeClass}">
+      <img loading="lazy" src="${data.img}" class="img">
+      <p>${data.name}</p>
+      <p>Type: ${data.typesArray.join(", ")}</p>
+    </div>
+  `;
+}
+
 //Renders the dialog.
 async function renderDialog(data){
    const typeClass = getTypeClass(data.typesArray);
