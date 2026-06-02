@@ -13,10 +13,41 @@ const body = document.body;
 let currentStart = 1;
 let PAGE_SIZE = 20;
 let dialogStop = 20;
+
+//Used to switch between the pokemon that matched the search
+let filteredNumbers = [];
 async function loadData() {
   const response = await fetch(BASE_URL);
   const data = await response.json();
   return data;
+}
+
+async function searchForPokemon(search) {
+  showCaseRef.innerHTML = "";
+  filteredNumbers = [];
+  dialogContainer = [];
+  if(search.length < 3){
+  openError();
+  loadBtn.style.display = "none";
+  return;
+  }
+  showLoadingSpinner();
+  const searchedName = search.charAt(0).toUpperCase() + search.slice(1);
+  // Filter
+  let filtered = pokeNames.filter((name, index) =>
+    name.includes(searchedName) ||
+  name.includes(search)
+  );
+  const numbers = [];
+  for(let i=0; i<filtered.length; i++){
+   numbers.push(filtered[i].replace(/\D/g, ""));
+  }
+  filteredNumbers = filtered.map(item =>
+  Number(item.replace(/\D/g, ""))
+);
+  numbers.forEach(number => renderPokemon(number));
+  removeLoadingSpinner();
+  return filtered;
 }
 
 //Returns an array with all the Pokemonnames.
