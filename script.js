@@ -319,6 +319,38 @@ async function renderDialog(data){
    </div>`
 }
 
+async function renderDialogSearch(data){
+   const typeClass = getTypeClass(data.typesArray);
+   if(filteredNumbers.length >1){
+  return `
+  <div id="${data.index}" class="relative ${typeClass}">
+    <button class="leftBtn" onclick="searchDialogShowPreviousImg(${data.index})"><<</button>
+    <button class="btn" onclick="searchDialogShowNextImg(${data.index})">>></button>
+    <img src="${data.img}" class="dialogImg">
+    <p>${data.name}<br>
+    <div class="queryContainer">
+      ${data.symbolArray.map((symbol) => `<img src="${symbol}" class="typeImg">`).join("")}
+    </div>
+    Type: ${data.typesArray.join(", ")}<br>
+    ${data.stats[0]}<br>${data.stats[1]}<br>${data.stats[2]}
+   </p>
+   </div>`
+   }
+   else{
+     return `
+  <div id="${data.index}" class="relative ${typeClass}">
+    <img src="${data.img}" class="dialogImg">
+    <p>${data.name}<br>
+    <div class="queryContainer">
+      ${data.symbolArray.map((symbol) => `<img src="${symbol}" class="typeImg">`).join("")}
+    </div>
+    Type: ${data.typesArray.join(", ")}<br>
+    ${data.stats[0]}<br>${data.stats[1]}<br>${data.stats[2]}
+   </p>
+   </div>`
+   }
+}
+
 //Opens the dialog.
 async function openDialog(index){
   showLoadingSpinner();
