@@ -147,6 +147,30 @@ async function getPokemonSymbolImg(url){
   }
   return symbolArray;
 }
+
+async function getTestData(index) {
+  //  // 1. RAM Cache prüfen
+  // if (pokemonMemoryCache[index]) {
+  //   console.log("Aus Memory Cache");
+  //   return pokemonMemoryCache[index];
+  // }
+  const url = `https://pokeapi.co/api/v2/pokemon/${index}/`;
+  // Open Cache
+  const cache = await caches.open("pokemon-cache");
+  // Check if the response of the Cache is already existing.
+  const cachedResponse = await cache.match(url);
+  //If the url is already existing in the cache, it will be used.
+  if (cachedResponse) {
+    // console.log("Loaded from Cache");
+    const cachedData = await cachedResponse.json();
+    return await getData(cachedData, index);
+  }
+   //Else it will do a regular fetch
+   else{
+    return await regularFetch(cache, url, index);
+   }
+}
+
 //Returns all the Data of each Pokemon
 async function getData(index){
   const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${index}/`);
