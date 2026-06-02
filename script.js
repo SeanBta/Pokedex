@@ -408,10 +408,10 @@ async function openSearchDialog(index){
 
 function dialogShowNextImg(index){
   if(index < 8){
-    openPornDialog(index +1);
+    openDialog(index +1);
   }
   else{
-    openPornDialog(1);
+    openDialog(1);
   }
 }
 
