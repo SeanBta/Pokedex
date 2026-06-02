@@ -8,19 +8,17 @@ const loadBtn = document.getElementById("loadBtn");
 const inputRef = document.getElementById('input');
 const pokemonContainerRef = document.getElementById('pokemonContainerRef');
 const body = document.body;
-
-//Current start and end of the page. After an click on the loadMorePokemon() button. It will raise currenStart to 21 and dialogStop to 40.
+//Hier werden die bereits von der API abgerufenen Daten gespeichert.
+let pokemonMemoryCache = {};
+//Used to push all the Pokemon names in.
+let pokeNames = [];
+let pokeIndexes = [];
+//Current start, pagesize and end of the page. After an click on the loadMorePokemon() button. It will raise currenStart by 20 and dialogStop by 20 each time.
 let currentStart = 1;
 let PAGE_SIZE = 20;
 let dialogStop = 20;
-let pokeNames = [];
-//Used to switch between the pokemon that matched the search
+//Used for the search dialog to switch between the pokemon that matched the search.
 let filteredNumbers = [];
-async function loadData() {
-  const response = await fetch(BASE_URL);
-  const data = await response.json();
-  return data;
-}
 
 async function searchForPokemon(search) {
   showCaseRef.innerHTML = "";
@@ -50,23 +48,6 @@ async function searchForPokemon(search) {
   return filtered;
 }
 
-//Returns an array with all the Pokemonnames.
-async function getAllPokemon(){
-  for(let i=1; i<= 150; i++){
-    const data = await getData(i);
-    pokeNames.push(data.name);
-  }
-   return pokeNames;
-}
-
-function filterPokemon(arr, search) {
-  const s = search.toLowerCase();
-  return arr
-    .map((pokemon, index) =>
-      pokemon.toLowerCase().includes(s) ? index + 1 : -1
-    )
-    .filter(index => index !== -1);
-}
 //Used to search for the Pokemon in the header.
 async function searchPokemon(id) {
   showLoadingSpinner();
@@ -80,7 +61,32 @@ async function searchPokemon(id) {
   else{
   if (!query) return await loadPokemon(1, 20);
   await renderSearch(query);
+  }
 }
+
+async function getAllPokemon(){
+  for (let i = 1; i <= 150; i++) {
+    const data = await getTestData(i);
+    pokeNames.push(data.name + data.index);
+    // pokeIndexes.push(data.index);
+    // return [data.name, data.index];
+  }
+}
+
+//Used to search for the Pokemon in the header.
+async function searchPokemon(id) {
+  showLoadingSpinner();
+  const query = document.getElementById(id).value.trim();
+  if(query.length <3){
+    openError();
+    showCaseRef.innerHTML = "";
+    removeLoadingSpinner();
+    return;
+  }
+  else{
+  if (!query) return await loadPokemon(1, 20);
+  await renderSearch(query);
+  }
 }
 //Renders the Pokemon which match the search.
 async function renderSearch(query){
@@ -107,24 +113,27 @@ function removeLoadingSpinner(){
   loadBtn.disabled = false;
 }
 
-  async function returnFetch(prefix, index){
-    let response = await fetch(BASE_URL + prefix + index);
-    return response;
-  }
+async function returnFetch(prefix, index){
+  let response = await fetch(BASE_URL + prefix + index);
+  return response;
+}
+
 //Returns the Name of the Pokemon with the first Letter written in Uppercase.
 async function loadPokemonName(index){
     let response = await returnFetch('pokemon/', index);
     let data = await response.json();
     return capitalizeFirstLetter(data.name);
-  }
+}
+
 async function resetPokemon(){
   showCaseRef.innerHTML = "";
-  init();
+ loadPokemon(1,20);
   currentStart = 1;
   dialogStop = 20;
   loadBtn.style.display = "block";
  
 }
+
 //Invoked through the button on the bottom of the website. Renders 20 more Pokemon.
 async function loadMorePokemon() {
   currentStart += PAGE_SIZE;
@@ -140,11 +149,6 @@ async function loadMorePokemon() {
 //Sets the first Char to Uppercase and then adds the rest of the string.
 function capitalizeFirstLetter(name) {
   return name.charAt(0).toUpperCase() + name.slice(1);
-}
-
-function closeDialogWith(event) {
-  dialogRef.close();
-  dialogRef.innerHTML = ""; 
 }
 
 //Closes the dialog
@@ -163,17 +167,6 @@ async function getPokemonUrl(data){
     response.push(typesArray[i].type.url);
   }
   return response;
-}
-//Returns an Array of the Typesymbols of each Pokemon.
-async function getPokemonSymbolImg(url){
-  let symbolArray = [];
-  for(let i=0; i<url.length; i++){
-    const response = await fetch(url[i]);
-    const data = await response.json();
-    let symbolImg = data.sprites["generation-ix"]["scarlet-violet"].symbol_icon;
-    symbolArray.push(symbolImg);
-  }
-  return symbolArray;
 }
 
 async function getTestData(index) {
@@ -215,7 +208,27 @@ async function regularFetch(cache, url, index){
   }
 }
 
-//Returns all the Data of each Pokemon
+async function getPokemonSymbolImg(urls) {
+  const cache = await caches.open("pokemon-cache");
+
+  return Promise.all(
+    urls.map(async (url) => {
+      const cachedResponse = await cache.match(url);
+
+      if (cachedResponse) {
+        const data = await cachedResponse.json();
+        return data.sprites["generation-ix"]["scarlet-violet"].symbol_icon;
+      }
+
+      const response = await fetch(url);
+      await cache.put(url, response.clone());
+
+      const data = await response.json();
+      return data.sprites["generation-ix"]["scarlet-violet"].symbol_icon;
+    })
+  );
+}
+
 async function getData(data, index){
   const name = data.name[0].toUpperCase() + data.name.slice(1);
   let img = data.sprites.versions["generation-viii"]["brilliant-diamond-shining-pearl"]
@@ -231,8 +244,8 @@ async function getData(data, index){
 //Helper function to call the render function.
 function init(){
  loadPokemon(1,20);
+ getAllPokemon();
 }
-init();
 
 //Basic loading function for rendering the Pokemon.
 async function loadPokemon(start, stop) {
@@ -244,6 +257,7 @@ async function loadPokemon(start, stop) {
       if (index <= 150) {
         promises.push(getTestData(index));
       }}
+  // showCaseRef.innerHTML += await renderPoke(promises);
   const allPokemon = await Promise.all(promises);
   const html = allPokemon.map(p => createPokemonHTML(p)).join("");
   showCaseRef.innerHTML += html;
@@ -252,6 +266,13 @@ async function loadPokemon(start, stop) {
   } finally {
     removeLoadingSpinner();
   }
+}
+
+//Returns the html to render the pokemon
+async function renderPoke(promises){
+  const allPokemon = await Promise.all(promises);
+  const html = allPokemon.map(p => createPokemonHTML(p)).join("");
+  return html;
 }
 
 //Renders the single Pokemons. Used for searchPokemon().
@@ -371,27 +392,58 @@ async function openDialog(index){
     removeLoadingSpinner();
   }
 
-//Shows the next pokemon within the dialog and checks the currently loaded pokemon.
+  //Opens the dialog.
+async function openSearchDialog(index){
+  showLoadingSpinner();
+    dialogContainerRef.innerHTML = "";
+    dialogRef.showModal();
+    const data = await getTestData(index);
+    dialogRef.classList.add('dialog');
+    document.body.classList.add('no-scroll');
+    dialogContainerRef.innerHTML += await renderDialogSearch(data);
+    removeLoadingSpinner();
+  }
+
 function dialogShowNextImg(index){
-  if(index < dialogStop){
-    openDialog(index +1);
+  if(index < 8){
+    openPornDialog(index +1);
   }
   else{
-    openDialog(currentStart);
+    openPornDialog(1);
   }
 }
-//Shows the previous pokemon within the dialog and checks the currently loaded pokemon.
+
+function searchDialogShowNextImg(index) {
+  const currentPos = filteredNumbers.indexOf(index);
+
+  if (currentPos < filteredNumbers.length - 1) {
+    openSearchDialog(filteredNumbers[currentPos + 1]);
+  } else {
+    openSearchDialog(filteredNumbers[0]);
+  }
+}
+
 function dialogShowPreviousImg(index){
-  if(index > currentStart){
-    openDialog(index -1);
+  if(index > 1){
+    openPornDialog(index -1);
   }
   else{
-    openDialog(dialogStop);
+    openPornDialog(8);
+  }
+}
+
+function searchDialogShowPreviousImg(index) {
+  const currentPos = filteredNumbers.indexOf(index);
+
+  if (currentPos > 0) {
+    openSearchDialog(filteredNumbers[currentPos - 1]);
+  } else {
+    openSearchDialog(filteredNumbers[filteredNumbers.length - 1]);
   }
 }
 
 function openError(){
-  dialogRef.innerHTML = "Error! At least 3 letters required for search!";
-  dialogRef.innerHTML += `<br><button onclick="resetPokemon()">Reset pokemon</button>`;
+  showCaseRef.innerHTML = "Error! At least 3 letters required for search!";
+  showCaseRef.innerHTML += `<br><button onclick="resetPokemon()">Reset pokemon</button>`;
   dialogRef.showModal();
 }
