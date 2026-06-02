@@ -13,7 +13,7 @@ const body = document.body;
 let currentStart = 1;
 let PAGE_SIZE = 20;
 let dialogStop = 20;
-
+let pokeNames = [];
 //Used to switch between the pokemon that matched the search
 let filteredNumbers = [];
 async function loadData() {
@@ -52,13 +52,10 @@ async function searchForPokemon(search) {
 
 //Returns an array with all the Pokemonnames.
 async function getAllPokemon(){
-  let pokeNames = [];
-  let pokeIndexes = [];
   for(let i=1; i<= 150; i++){
     const data = await getData(i);
     pokeNames.push(data.name);
   }
-  //  console.log(pokeNames);
    return pokeNames;
 }
 
@@ -219,16 +216,13 @@ async function regularFetch(cache, url, index){
 }
 
 //Returns all the Data of each Pokemon
-async function getData(index){
-  const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${index}/`);
-  const data = await response.json();
+async function getData(data, index){
   const name = data.name[0].toUpperCase() + data.name.slice(1);
   let img = data.sprites.versions["generation-viii"]["brilliant-diamond-shining-pearl"]
   .front_default;
   let typesArray = [];
   data.types.map((t) => typesArray.push(t.type.name[0].toUpperCase() + t.type.name.slice(1)) );
-  let stats = [];
-  data.stats.map((stat, index) => stats.push(data.stats[index].stat.name + ": " + data.stats[index].base_stat));
+  let stats = data.stats.map((stat, index) => (data.stats[index].stat.name + ": " + data.stats[index].base_stat));
   let url = await getPokemonUrl(data);
   let symbolArray = await getPokemonSymbolImg(url);
   return {name, img, typesArray, stats, index, symbolArray};
