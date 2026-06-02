@@ -257,18 +257,18 @@ async function loadPokemon(start, stop) {
 //Renders the single Pokemons. Used for searchPokemon().
 async function renderPokemon(index) {
   inputRef.value = "";
+  loadBtn.style.display = "none";
+  let allPokemon = [];
   showLoadingSpinner();
+   let promises = [];
   try {
-    let promise = [];
-      if (index <= 150) {
-        promise.push(await getData(index));
-      }
-    // simultaneous loading of the pokemon data.
-    const html = promise.map(p => createPokemonHTML(p)).join("");
-    showCaseRef.innerHTML += html;
+    promises.push(getTestData(index));
+    allPokemon = await Promise.all(promises);
   } catch (error) {
     console.log(error);
   } finally {
+    const html = allPokemon.map(p => createPokemonHTML2(p)).join("");
+    showCaseRef.innerHTML += html;
     removeLoadingSpinner();
   }
 }
