@@ -9,7 +9,9 @@
   <link rel="icon" href="./img/pokeball.png" type="image/x-icon">
 </head>
   <body>
+  <div class="frontPage">
   <header class="header">
+    <div class="innerHeader">
     <div class="left-header">
       <img src="./img/pokeball.png" class="header-img">
       <a href="">Home</a>
@@ -17,7 +19,8 @@
         <div class="queryContainer">
           <button class="button" onclick="resetPokemon(1,20)">Reset</button>
           <input placeholder="Nach Pokemon suchen" type="text" id="input" min-length="3" required>
-          <button class="button" type="button" onclick="searchForPokemon(document.getElementById('input'.value))">Search</button>
+          <button class="button" type="button" onclick="searchForPokemon(document.getElementById('input').value)">Search</button>
+        </div>
         </div>
   </header>
   <div class="pokemonContainer" id="pokemonContainerRef">
@@ -28,19 +31,20 @@
     </dialog>
     <div id="showcase" class="gridContainer">
       </div>
-      <button id="loadBtn" style="font-size: 40px"onclick="loadMorePokemon()">↓</button>
+      <button id="loadBtn" class="loadBtn" onclick="loadMorePokemon()">↓</button>
       <div id="spinner" class="spinner hidden"></div>
   </div>
   <footer class="footer">
-    <div>
-      Developer Akademie
-    </div>
-    <div>
-      Sean Boutabba
+    <div class="innerFooterContainer">
+      <div>
+        Developer Akademie
+     </div>
+     <div>
+        Sean Boutabba
+     </div>
     </div>
   </footer>
-  <!-- <script src="promise.js"></script> -->
-   
+  </div>
 </body>
-<script src="pokeapi.js"></script>
+<script src="script.js"></script>
 </html>
