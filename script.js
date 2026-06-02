@@ -247,6 +247,8 @@ function init(){
  getAllPokemon();
 }
 
+init();
+
 //Basic loading function for rendering the Pokemon.
 async function loadPokemon(start, stop) {
   inputRef.value = "";
