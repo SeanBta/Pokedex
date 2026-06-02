@@ -302,41 +302,35 @@ function createPokemonHTML(data){
   
 }
 //Renders the dialog.
-async function renderDialog(index, name, typesArray, typeClass, img, stats, symbolArray){
+async function renderDialog(data){
+   const typeClass = getTypeClass(data.typesArray);
   return `
-  <div id="${index}" class="relative ${typeClass}">
-  <button class="leftBtn" onclick="dialogShowPreviousImg(${index})"><<</button>
-  <button class="btn" onclick="dialogShowNextImg(${index})">>></button>
-   <img src="${img}" class="dialogImg">
-   <p>${name}<br>
-   <div class="queryContainer">
-   ${symbolArray.map((symbol) => `<img src="${symbol}" class="typeImg">`).join("")}
-   </div>
-   Type: ${typesArray.join(", ")}<br>
-   ${stats[0]}<br>${stats[1]}<br>${stats[2]}
+  <div id="${data.index}" class="relative ${typeClass}">
+    <button class="leftBtn" onclick="dialogShowPreviousImg(${data.index})"><<</button>
+    <button class="btn" onclick="dialogShowNextImg(${data.index})">>></button>
+    <img src="${data.img}" class="dialogImg">
+    <p>${data.name}<br>
+    <div class="queryContainer">
+      ${data.symbolArray.map((symbol) => `<img src="${symbol}" class="typeImg">`).join("")}
+    </div>
+    Type: ${data.typesArray.join(", ")}<br>
+    ${data.stats[0]}<br>${data.stats[1]}<br>${data.stats[2]}
    </p>
    </div>`
 }
 
 //Opens the dialog.
-  async function openDialog(index){
-    showLoadingSpinner();
-    const promises = [];
-    try {
-      dialogContainerRef.innerHTML = "";
-      promises.push(await getData(index));
-    } 
-    catch(error) {
-     error}
-    finally{
-      dialogRef.showModal();
-      const data = await Promise.all(promises);
-      const {name, typesArray, img, stats, symbolArray } = data[0];
-      dialogRef.classList.add('dialog');
-      dialogContainerRef.innerHTML += await renderDialog(index, name, typesArray, getTypeClass(typesArray), img, stats, symbolArray);
-      removeLoadingSpinner();
-    }
+async function openDialog(index){
+  showLoadingSpinner();
+    dialogContainerRef.innerHTML = "";
+    dialogRef.showModal();
+    const data = await getTestData(index);
+    dialogRef.classList.add('dialog');
+    document.body.classList.add('no-scroll');
+    dialogContainerRef.innerHTML += await renderDialog(data);
+    removeLoadingSpinner();
   }
+
 //Shows the next pokemon within the dialog and checks the currently loaded pokemon.
 function dialogShowNextImg(index){
   if(index < dialogStop){
