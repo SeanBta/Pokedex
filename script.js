@@ -406,12 +406,13 @@ async function openSearchDialog(index){
     removeLoadingSpinner();
   }
 
+//Shows the next pokemon within the dialog and checks the currently loaded pokemon.
 function dialogShowNextImg(index){
-  if(index < 8){
+  if(index < dialogStop){
     openDialog(index +1);
   }
   else{
-    openDialog(1);
+    openDialog(currentStart);
   }
 }
 
@@ -425,8 +426,9 @@ function searchDialogShowNextImg(index) {
   }
 }
 
+//Shows the previous pokemon within the dialog and checks the currently loaded pokemon.
 function dialogShowPreviousImg(index){
-  if(index > 1){
+  if(index > currentStart){
     openDialog(index -1);
   }
   else{
