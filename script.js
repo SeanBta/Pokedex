@@ -290,7 +290,7 @@ async function renderPokemon(index) {
   } catch (error) {
     console.log(error);
   } finally {
-    const html = allPokemon.map(p => createPokemonHTML2(p)).join("");
+    const html = allPokemon.map(p => createPokemonHTMLSearchDialog(p)).join("");
     showCaseRef.innerHTML += html;
     removeLoadingSpinner();
   }
@@ -321,7 +321,7 @@ function createPokemonHTML(data){
   `;
 }
 
-function createPokemonHTML2(data){
+function createPokemonHTMLSearchDialog(data){
   const typeClass = getTypeClass(data.typesArray);
   return `
     <div id="${data.index}" onclick="openSearchDialog(${data.index})" class="pokemon ${typeClass}">
