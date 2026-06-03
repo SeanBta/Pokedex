@@ -23,7 +23,6 @@ let filteredNumbers = [];
 async function searchForPokemon(search) {
   showCaseRef.innerHTML = "";
   filteredNumbers = [];
-  dialogContainer = [];
   if(search.length < 3){
   openError();
   loadBtn.style.display = "none";
@@ -37,6 +36,9 @@ async function searchForPokemon(search) {
   name.includes(search)
   );
   const numbers = [];
+  if(filtered.length == 0){
+    showCaseRef.innerHTML = "No matches found!";
+  }
   for(let i=0; i<filtered.length; i++){
    numbers.push(filtered[i].replace(/\D/g, ""));
   }
