@@ -410,7 +410,7 @@ function dialogShowNextImg(index){
     openDialog(index +1);
   }
   else{
-    openDialog(currentStart);
+    openDialog(1);
   }
 }
 
