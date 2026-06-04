@@ -45,7 +45,7 @@ async function searchForPokemon(search) {
   filteredNumbers = filtered.map(item =>
   Number(item.replace(/\D/g, ""))
 );
-  numbers.forEach(number => renderPokemon(number));
+  numbers.forEach(number => renderSinglePokemon(number));
   removeLoadingSpinner();
   return filtered;
 }
@@ -98,7 +98,7 @@ async function renderSearch(query){
   const pokeSearch = query.charAt(0).toUpperCase() + query.slice(1);
   const pokemon = await getAllPokemon();
   const pokeIndexes = filterPokemon(pokemon, pokeSearch).slice(0, 14);
-  pokeIndexes.map((pokemon) =>{renderPokemon(pokemon)});
+  pokeIndexes.map((pokemon) =>{renderSinglePokemon(pokemon)});
      if(pokeIndexes.length == 0){
         showCaseRef.innerHTML += `<div class="flex" style="position: relative; top: 20%; left: 100%;"><p>No matches found! Try again.</p></div>`
         removeLoadingSpinner();
@@ -280,7 +280,7 @@ async function renderPoke(promises){
 }
 
 //Renders the single Pokemons. Used for searchPokemon().
-async function renderPokemon(index) {
+async function renderSinglePokemon(index) {
   inputRef.value = "";
   loadBtn.style.display = "none";
   let allPokemon = [];
