@@ -262,7 +262,6 @@ async function loadPokemon(start, stop) {
       if (index <= 150) {
         promises.push(getTestData(index));
       }}
-  // showCaseRef.innerHTML += await renderPoke(promises);
   const allPokemon = await Promise.all(promises);
   const html = allPokemon.map(p => createPokemonHTML(p)).join("");
   showCaseRef.innerHTML += html;
@@ -289,12 +288,12 @@ async function renderPokemon(index) {
    let promises = [];
   try {
     promises.push(getTestData(index));
-    allPokemon = await Promise.all(promises);
+    const allPokemon = await Promise.all(promises);
+    const html = allPokemon.map(p => createPokemonHTMLSearchDialog(p)).join("");
+    showCaseRef.innerHTML += html;
   } catch (error) {
     console.log(error);
   } finally {
-    const html = allPokemon.map(p => createPokemonHTMLSearchDialog(p)).join("");
-    showCaseRef.innerHTML += html;
     removeLoadingSpinner();
   }
 }
