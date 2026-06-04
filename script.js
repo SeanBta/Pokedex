@@ -28,7 +28,6 @@ async function searchForPokemon(search) {
   }
   showLoadingSpinner();
   let [filteredNumbers, filtered] = filterPokemon(search);
-  console.log(filteredNumbers);
   let numbers = filterNumber(filtered);
   numbers.forEach(number => renderSinglePokemon(number));
   removeLoadingSpinner();
@@ -332,7 +331,6 @@ async function renderDialogSearchMultipleMatches(data){
 }
 
 async function renderDialogSearchOneMatchFound(data){
-   console.log(filteredNumbers);
    return `
   <div id="${data.index}" class="relative ${data.typeClass}">
     <img src="${data.img}" class="dialogImg">
