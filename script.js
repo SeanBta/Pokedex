@@ -240,7 +240,8 @@ async function getData(data, index){
   let stats = data.stats.map((stat, index) => (data.stats[index].stat.name + ": " + data.stats[index].base_stat));
   let url = await getPokemonUrl(data);
   let symbolArray = await getPokemonSymbolImg(url);
-  return {name, img, typesArray, stats, index, symbolArray};
+  const typeClass = getTypeClass(typesArray);
+  return {name, img, typesArray, stats, index, symbolArray, typeClass};
 }
 
 //Helper function to call the render function.
@@ -313,9 +314,8 @@ function getTypeClass(types) {
 
 //Renders the data for each Pokemon.
 function createPokemonHTML(data){
-  const typeClass = getTypeClass(data.typesArray);
   return `
-    <div id="${data.index}" onclick="openDialog(${data.index})" class="pokemon ${typeClass}">
+    <div id="${data.index}" onclick="openDialog(${data.index})" class="pokemon ${data.typeClass}">
       <img loading="lazy" src="${data.img}" class="img">
       <p>${data.name}</p>
       <p>Type: ${data.typesArray.join(", ")}</p>
@@ -324,9 +324,8 @@ function createPokemonHTML(data){
 }
 
 function createPokemonHTMLSearchDialog(data){
-  const typeClass = getTypeClass(data.typesArray);
   return `
-    <div id="${data.index}" onclick="openSearchDialog(${data.index})" class="pokemon ${typeClass}">
+    <div id="${data.index}" onclick="openSearchDialog(${data.index})" class="pokemon ${data.typeClass}">
       <img loading="lazy" src="${data.img}" class="img">
       <p>${data.name}</p>
       <p>Type: ${data.typesArray.join(", ")}</p>
@@ -336,9 +335,8 @@ function createPokemonHTMLSearchDialog(data){
 
 //Renders the dialog.
 async function renderDialog(data){
-   const typeClass = getTypeClass(data.typesArray);
   return `
-  <div id="${data.index}" class="relative ${typeClass}">
+  <div id="${data.index}" class="relative ${data.typeClass}">
     <button class="leftBtn" onclick="dialogShowPreviousImg(${data.index})"><<</button>
     <button class="btn" onclick="dialogShowNextImg(${data.index})">>></button>
     <img src="${data.img}" class="dialogImg">
@@ -353,10 +351,9 @@ async function renderDialog(data){
 }
 
 async function renderDialogSearch(data){
-   const typeClass = getTypeClass(data.typesArray);
    if(filteredNumbers.length >1){
   return `
-  <div id="${data.index}" class="relative ${typeClass}">
+  <div id="${data.index}" class="relative ${data.typeClass}">
     <button class="leftBtn" onclick="searchDialogShowPreviousImg(${data.index})"><<</button>
     <button class="btn" onclick="searchDialogShowNextImg(${data.index})">>></button>
     <img src="${data.img}" class="dialogImg">
@@ -371,7 +368,7 @@ async function renderDialogSearch(data){
    }
    else{
      return `
-  <div id="${data.index}" class="relative ${typeClass}">
+  <div id="${data.index}" class="relative ${data.typeClass}">
     <img src="${data.img}" class="dialogImg">
     <p>${data.name}<br>
     <div class="queryContainer">
