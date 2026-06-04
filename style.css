@@ -70,6 +70,7 @@ body{
   display: flex;
   justify-content: space-around;
   align-items: center;
+  font-size: 24px;
 }
 .left-header{
   width: 50%;
@@ -81,6 +82,7 @@ body{
 
 input{
   line-height: 24px;
+  font-size: 24px;
 }
 
 .header-img{
@@ -133,8 +135,8 @@ a:hover{
 }
 
 .button{
-  padding: 4px;
   text-align: center;
+  font-size: 24px;
 }
 
 .btn{
@@ -168,7 +170,9 @@ a:hover{
   max-width: 1920px;
   height: 100%;
 }
-
+.singlePokemonContainer{
+  grid-template-columns: repeat(1, 1fr);
+}
 .pokemonContainer{
   flex: 1;
   display: flex;
