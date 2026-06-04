@@ -28,6 +28,7 @@ async function searchForPokemon(search) {
   }
   showLoadingSpinner();
   let [filteredNumbers, filtered] = filterPokemon(search);
+  console.log(filteredNumbers);
   let numbers = filterNumber(filtered);
   numbers.forEach(number => renderSinglePokemon(number));
   removeLoadingSpinner();
@@ -36,7 +37,7 @@ async function searchForPokemon(search) {
 //Filters the searched value. Checks if there are matches with all the pokemon names even with first letter uppercase or lowercase.
 //Checks if no matches were found, then filters the index of the matching pokemon and returns the matching names.
 function filterPokemon(search){
-  let filteredNumbers = [];
+  filteredNumbers = [];
    const searchedName = search.charAt(0).toUpperCase() + search.slice(1);
   let filtered = pokeNames.filter((name, index) =>
     name.includes(searchedName) ||
@@ -307,10 +308,10 @@ async function renderDialog(data){
 
 async function renderDialogSearch(data){
    if(filteredNumbers.length >1){
-    await renderDialogSearchMultipleMatches(data);
+    return await renderDialogSearchMultipleMatches(data)
    }
    else{
-    await renderDialogSearchOneMatchFound(data);
+    return await renderDialogSearchOneMatchFound(data);
    }
 }
 
@@ -331,6 +332,7 @@ async function renderDialogSearchMultipleMatches(data){
 }
 
 async function renderDialogSearchOneMatchFound(data){
+   console.log(filteredNumbers);
    return `
   <div id="${data.index}" class="relative ${data.typeClass}">
     <img src="${data.img}" class="dialogImg">
