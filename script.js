@@ -8,8 +8,7 @@ const loadBtn = document.getElementById("loadBtn");
 const inputRef = document.getElementById('input');
 const pokemonContainerRef = document.getElementById('pokemonContainerRef');
 const body = document.body;
-//Hier werden die bereits von der API abgerufenen Daten gespeichert.
-let pokemonMemoryCache = {};
+
 //Used to push all the Pokemon names in.
 let pokeNames = [];
 let pokeIndexes = [];
@@ -67,21 +66,6 @@ async function getAllPokemon(){
     pokeNames.push(data.name + data.index);
   }
 }
-
-//Renders the Pokemon which match the search.
-async function renderSearch(query){
-  showLoadingSpinner();
-  loadBtn.style.display = "none";
-  showCaseRef.innerHTML = "";
-  const pokeSearch = query.charAt(0).toUpperCase() + query.slice(1);
-  const pokemon = await getAllPokemon();
-  const pokeIndexes = filterPokemon(pokemon, pokeSearch).slice(0, 14);
-  pokeIndexes.map((pokemon) =>{renderSinglePokemon(pokemon)});
-     if(pokeIndexes.length == 0){
-        showCaseRef.innerHTML += `<div class="flex" style="position: relative; top: 20%; left: 100%;"><p>No matches found! Try again.</p></div>`
-        removeLoadingSpinner();
-    }
-  }
 
 function showLoadingSpinner(){
   spinner.classList.remove("hidden");
