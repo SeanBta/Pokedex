@@ -22,74 +22,52 @@ let filteredNumbers = [];
 
 async function searchForPokemon(search) {
   showCaseRef.innerHTML = "";
-  filteredNumbers = [];
   if(search.length < 3){
   openError();
   loadBtn.style.display = "none";
   return;
   }
   showLoadingSpinner();
-  const searchedName = search.charAt(0).toUpperCase() + search.slice(1);
-  // Filter
-  let filtered = pokeNames.filter((name, index) =>
-    name.includes(searchedName) ||
-  name.includes(search)
-  );
-  const numbers = [];
-  if(filtered.length == 0){
-    showCaseRef.innerHTML = "No matches found!";
-  }
-  for(let i=0; i<filtered.length; i++){
-   numbers.push(filtered[i].replace(/\D/g, ""));
-  }
-  filteredNumbers = filtered.map(item =>
-  Number(item.replace(/\D/g, ""))
-);
+  let [filteredNumbers, filtered] = filterPokemon(search);
+  let numbers = filterNumber(filtered);
   numbers.forEach(number => renderSinglePokemon(number));
   removeLoadingSpinner();
   return filtered;
 }
-
-//Used to search for the Pokemon in the header.
-async function searchPokemon(id) {
-  showLoadingSpinner();
-  const query = document.getElementById(id).value.trim();
-  if(query.length <3){
-    openError();
-    showCaseRef.innerHTML = "";
-    removeLoadingSpinner();
-    return;
+//Filters the searched value. Checks if there are matches with all the pokemon names even with first letter uppercase or lowercase.
+//Checks if no matches were found, then filters the index of the matching pokemon and returns the matching names.
+function filterPokemon(search){
+  let filteredNumbers = [];
+   const searchedName = search.charAt(0).toUpperCase() + search.slice(1);
+  let filtered = pokeNames.filter((name, index) =>
+    name.includes(searchedName) ||
+  name.includes(search)
+  );
+  if(filtered.length == 0){
+    showCaseRef.innerHTML = "No matches found!";
   }
-  else{
-  if (!query) return await loadPokemon(1, 20);
-  await renderSearch(query);
+  filteredNumbers = filtered.map(item =>
+  Number(item.replace(/\D/g, ""))
+);
+return  [filteredNumbers, filtered];
+}
+//Filters the index of the matching pokemon out of the letters
+function filterNumber(array){
+  const numbers = [];
+  for(let i=0; i<array.length; i++){
+   numbers.push(array[i].replace(/\D/g, ""));
   }
+  return numbers;
 }
 
+//Pushes all Pokemonnames in the Array pokeNames. Invoked right at the start.
 async function getAllPokemon(){
   for (let i = 1; i <= 150; i++) {
     const data = await getTestData(i);
     pokeNames.push(data.name + data.index);
-    // pokeIndexes.push(data.index);
-    // return [data.name, data.index];
   }
 }
 
-//Used to search for the Pokemon in the header.
-async function searchPokemon(id) {
-  showLoadingSpinner();
-  const query = document.getElementById(id).value.trim();
-  if(query.length <3){
-    openError();
-    showCaseRef.innerHTML = "";
-    removeLoadingSpinner();
-    return;
-  }
-  else{
-  if (!query) return await loadPokemon(1, 20);
-  await renderSearch(query);
-  }
-}
 //Renders the Pokemon which match the search.
 async function renderSearch(query){
   showLoadingSpinner();
