@@ -132,13 +132,8 @@ async function getPokemonUrl(data){
   }
   return response;
 }
-
+//Function to check if the current url is already saved within the "pokemon-cache" of the browser, if not, it will do a regular fetch from the api.
 async function getTestData(index) {
-  //  // 1. RAM Cache prüfen
-  // if (pokemonMemoryCache[index]) {
-  //   console.log("Aus Memory Cache");
-  //   return pokemonMemoryCache[index];
-  // }
   const url = `https://pokeapi.co/api/v2/pokemon/${index}/`;
   // Open Cache
   const cache = await caches.open("pokemon-cache");
@@ -146,7 +141,6 @@ async function getTestData(index) {
   const cachedResponse = await cache.match(url);
   //If the url is already existing in the cache, it will be used.
   if (cachedResponse) {
-    // console.log("Loaded from Cache");
     const cachedData = await cachedResponse.json();
     return await getData(cachedData, index);
   }
