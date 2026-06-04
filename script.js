@@ -21,9 +21,11 @@ let filteredNumbers = [];
 
 async function searchForPokemon(search) {
   showCaseRef.innerHTML = "";
+  showCaseRef.classList.remove('singlePokemonContainer');
   if(search.length < 3){
   openError();
   loadBtn.style.display = "none";
+  showCaseRef.classList.add('singlePokemonContainer');
   return;
   }
   showLoadingSpinner();
@@ -44,6 +46,8 @@ function filterPokemon(search){
   );
   if(filtered.length == 0){
     showCaseRef.innerHTML = "No matches found!";
+    loadBtn.style.display = "none";
+    showCaseRef.classList.add('singlePokemonContainer');
   }
   filteredNumbers = filtered.map(item =>
   Number(item.replace(/\D/g, ""))
@@ -90,6 +94,7 @@ async function loadPokemonName(index){
 }
 
 async function resetPokemon(){
+  showCaseRef.classList.remove('singlePokemonContainer');
   showCaseRef.innerHTML = "";
  loadPokemon(1,20);
   currentStart = 1;
@@ -279,6 +284,9 @@ function createPokemonHTML(data){
 }
 
 function createPokemonHTMLSearchDialog(data){
+  if(filteredNumbers.length <2){
+    showCaseRef.classList.add('singlePokemonContainer');
+  }
   return `
     <div id="${data.index}" onclick="openSearchDialog(${data.index})" class="pokemon ${data.typeClass}">
       <img loading="lazy" src="${data.img}" class="img">
