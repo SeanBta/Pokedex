@@ -117,6 +117,13 @@ a:hover{
   align-items: center;
 }
 
+.flexColumn{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
 .queryContainer{
   width: 50%;
   display: flex;
@@ -183,7 +190,7 @@ a:hover{
   font-size: 24px;
   margin: 20px;
   width: 100%;
-  max-width: 1920px;
+  max-width: 1440px;
 }
 
 .img{
@@ -218,6 +225,16 @@ p{
 .pokemon {
   transition: transform 0.25s ease, box-shadow 0.25s ease;
   cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.resetButton{
+  height: 100px;
+  width: 200px;
+  font-size: 24px;
 }
 
 .pokemon:hover{

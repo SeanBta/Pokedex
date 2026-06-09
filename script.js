@@ -41,11 +41,10 @@ function filterPokemon(search){
   filteredNumbers = [];
    const searchedName = search.charAt(0).toUpperCase() + search.slice(1);
   let filtered = pokeNames.filter((name, index) =>
-    name.includes(searchedName) ||
-  name.includes(search)
+    name.includes(searchedName) || name.includes(search)
   );
   if(filtered.length == 0){
-    showCaseRef.innerHTML = "No matches found!";
+    showCaseRef.innerHTML = `<div class="flexColumn"><p>No matches found!</p><button class="resetButton" onclick="resetPokemon()">Reset Pokemon</button></div>`;
     loadBtn.style.display = "none";
     showCaseRef.classList.add('singlePokemonContainer');
   }
@@ -130,12 +129,12 @@ function closeDialog(){
 
 //Returns the url of the pokemon type.
 async function getPokemonUrl(data){
-  let response = [];
+  let urlResponse = [];
   let typesArray = data.types;
   for(let i=0; i<typesArray.length; i++){
-    response.push(typesArray[i].type.url);
+    urlResponse.push(typesArray[i].type.url);
   }
-  return response;
+  return urlResponse;
 }
 //Function to check if the current url is already saved within the "pokemon-cache" of the browser, if not, it will do a regular fetch from the api.
 async function getTestData(index) {
@@ -199,8 +198,8 @@ async function getData(data, index){
   let typesArray = [];
   data.types.map((t) => typesArray.push(t.type.name[0].toUpperCase() + t.type.name.slice(1)) );
   let stats = data.stats.map((stat, index) => (data.stats[index].stat.name + ": " + data.stats[index].base_stat));
-  let url = await getPokemonUrl(data);
-  let symbolArray = await getPokemonSymbolImg(url);
+  // let url = await getPokemonUrl(data);
+  let symbolArray = await getPokemonSymbolImg(await getPokemonUrl(data));
   const typeClass = getTypeClass(typesArray);
   return {name, img, typesArray, stats, index, symbolArray, typeClass};
 }
@@ -417,6 +416,6 @@ function searchDialogShowPreviousImg(index) {
 
 function openError(){
   showCaseRef.innerHTML = "Error! At least 3 letters required for search!";
-  showCaseRef.innerHTML += `<br><button onclick="resetPokemon()">Reset pokemon</button>`;
+  showCaseRef.innerHTML += `<div class="flex"><br><button onclick="resetPokemon()" class="resetButton">Reset pokemon</button></div>`;
   dialogRef.showModal();
 }
