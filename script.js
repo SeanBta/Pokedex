@@ -35,12 +35,13 @@ async function searchForPokemon(search) {
   removeLoadingSpinner();
   return filtered;
 }
+
 //Filters the searched value. Checks if there are matches with all the pokemon names even with first letter uppercase or lowercase.
 //Checks if no matches were found, then filters the index of the matching pokemon and returns the matching names.
 function filterPokemon(search){
   filteredNumbers = [];
-   const searchedName = search.charAt(0).toUpperCase() + search.slice(1);
-  let filtered = pokeNames.filter((name, index) =>
+    const searchedName = search.charAt(0).toUpperCase() + search.slice(1);
+    let filtered = pokeNames.filter((name, index) =>
     name.includes(searchedName) || name.includes(search)
   );
   if(filtered.length == 0){
@@ -53,6 +54,7 @@ function filterPokemon(search){
 );
 return  [filteredNumbers, filtered];
 }
+
 //Filters the index of the matching pokemon out of the letters
 function filterNumber(array){
   const numbers = [];
@@ -136,6 +138,7 @@ async function getPokemonUrl(data){
   }
   return urlResponse;
 }
+
 //Function to check if the current url is already saved within the "pokemon-cache" of the browser, if not, it will do a regular fetch from the api.
 async function getTestData(index) {
   const url = `https://pokeapi.co/api/v2/pokemon/${index}/`;
@@ -162,7 +165,6 @@ async function regularFetch(cache, url, index){
     }
     //The response needs to be cloned, since it can only be read once.
     await cache.put(url, response.clone());
-    console.log("Neu von API geladen");
     const data = await response.json();
     return await getData(data, index);
   } catch (error) {
@@ -172,19 +174,15 @@ async function regularFetch(cache, url, index){
 
 async function getPokemonSymbolImg(urls) {
   const cache = await caches.open("pokemon-cache");
-
   return Promise.all(
     urls.map(async (url) => {
       const cachedResponse = await cache.match(url);
-
       if (cachedResponse) {
         const data = await cachedResponse.json();
         return data.sprites["generation-ix"]["scarlet-violet"].symbol_icon;
       }
-
       const response = await fetch(url);
       await cache.put(url, response.clone());
-
       const data = await response.json();
       return data.sprites["generation-ix"]["scarlet-violet"].symbol_icon;
     })
