@@ -226,6 +226,12 @@ p{
   font-weight: 700;
 }
 
+ul{
+  margin: 0;
+}
+li{
+  display: grid;
+}
 .pokemon {
   transition: transform 0.25s ease, box-shadow 0.25s ease;
   cursor: pointer;
