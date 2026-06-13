@@ -19,6 +19,8 @@ let dialogStop = 20;
 //Used for the search dialog to switch between the pokemon that matched the search.
 let filteredNumbers = [];
 
+//All Pokemon that have actually been loaded
+let loadedPokemon = [];
 async function searchForPokemon(search) {
   showCaseRef.innerHTML = "";
   showCaseRef.classList.remove('singlePokemonContainer');
@@ -45,7 +47,7 @@ function filterPokemon(search){
     name.includes(searchedName) || name.includes(search)
   );
   if(filtered.length == 0){
-    showCaseRef.innerHTML = `<div class="flexColumn"><p>No matches found!</p><button class="resetButton" onclick="resetPokemon()">Reset Pokemon</button></div>`;
+    showCaseRef.innerHTML = `<div class="flexColumn" data-id="not-found"><p>No matches found!</p><button class="resetButton" onclick="resetPokemon()">Reset Pokemon</button></div>`;
     loadBtn.style.display = "none";
     showCaseRef.classList.add('singlePokemonContainer');
   }
@@ -221,7 +223,9 @@ async function loadPokemon(start, stop) {
         promises.push(getTestData(index));
       }}
   const allPokemon = await Promise.all(promises);
-  const html = allPokemon.map(p => createPokemonHTML(p)).join("");
+  // loadedPokemon.push(...allPokemon);
+  loadedPokemon = allPokemon;
+   const html = loadedPokemon.map(p => createPokemonHTML(p)).join("");
   showCaseRef.innerHTML += html;
   } catch (error) {
     console.log(error);
@@ -270,13 +274,24 @@ function getTypeClass(types) {
 }
 
 //Renders the data for each Pokemon.
+// function createPokemonHTML(data){
+//   return `
+//     <button data-id="card" onclick="openDialog(${data.index})"><div id="${data.index}" class="pokemon ${data.typeClass}">
+//       <img loading="lazy" src="${data.img}" data-id="card-image" class="img" alt="${data.name}">
+//       <p>${data.name}</p>
+//       <p>Type: ${data.typesArray.join(", ")}</p>
+//     </div></button>
+//   `;
+// }
+
 function createPokemonHTML(data){
   return `
-    <div id="${data.index}" onclick="openDialog(${data.index})" class="pokemon ${data.typeClass}">
-      <img loading="lazy" src="${data.img}" class="img">
+    <button id="${data.index}" class="pokemon ${data.typeClass}" data-id="card" 
+    onclick="openDialog(${data.index})">
+      <img loading="lazy" src="${data.img}" data-id="card-image" class="img" alt="${data.name}">
       <p>${data.name}</p>
       <p>Type: ${data.typesArray.join(", ")}</p>
-    </div>
+    </button>
   `;
 }
 
@@ -286,7 +301,7 @@ function createPokemonHTMLSearchDialog(data){
   }
   return `
     <div id="${data.index}" onclick="openSearchDialog(${data.index})" class="pokemon ${data.typeClass}">
-      <img loading="lazy" src="${data.img}" class="img">
+      <img loading="lazy" src="${data.img}" data-id="card-image" class="img" alt="${data.name}">
       <p>${data.name}</p>
       <p>Type: ${data.typesArray.join(", ")}</p>
     </div>
@@ -297,9 +312,10 @@ function createPokemonHTMLSearchDialog(data){
 async function renderDialog(data){
   return `
   <div id="${data.index}" class="relative ${data.typeClass}">
-    <button class="leftBtn" onclick="dialogShowPreviousImg(${data.index})"><<</button>
-    <button class="btn" onclick="dialogShowNextImg(${data.index})">>></button>
-    <img src="${data.img}" class="dialogImg">
+    <button class="leftBtn" data-id="prev-button" onclick="dialogShowPreviousImg(${data.index})"><<</button>
+    <button class="btn" data-id="next-button" onclick="dialogShowNextImg(${data.index})">>></button>
+    <button onclick="closeDialog()" data-id="close-dialog-button" class="closeDialogBtn">X</button>
+    <img src="${data.img}" alt="${data.name}" data-id="dialog-image" class="dialogImg">
     <p>${data.name}<br>
     <div class="queryContainer">
       ${data.symbolArray.map((symbol) => `<img src="${symbol}" class="typeImg">`).join("")}
