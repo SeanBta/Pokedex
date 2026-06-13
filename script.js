@@ -273,25 +273,14 @@ function getTypeClass(types) {
   return "";
 }
 
-//Renders the data for each Pokemon.
-// function createPokemonHTML(data){
-//   return `
-//     <button data-id="card" onclick="openDialog(${data.index})"><div id="${data.index}" class="pokemon ${data.typeClass}">
-//       <img loading="lazy" src="${data.img}" data-id="card-image" class="img" alt="${data.name}">
-//       <p>${data.name}</p>
-//       <p>Type: ${data.typesArray.join(", ")}</p>
-//     </div></button>
-//   `;
-// }
-
 function createPokemonHTML(data){
   return `
-    <button id="${data.index}" class="pokemon ${data.typeClass}" data-id="card" 
+    <li><button id="${data.index}" class="pokemon ${data.typeClass}" data-id="card" 
     onclick="openDialog(${data.index})">
       <img loading="lazy" src="${data.img}" data-id="card-image" class="img" alt="${data.name}">
       <p>${data.name}</p>
       <p>Type: ${data.typesArray.join(", ")}</p>
-    </button>
+    </button></li>
   `;
 }
 
@@ -300,11 +289,13 @@ function createPokemonHTMLSearchDialog(data){
     showCaseRef.classList.add('singlePokemonContainer');
   }
   return `
-    <div id="${data.index}" onclick="openSearchDialog(${data.index})" class="pokemon ${data.typeClass}">
+    <li> <button id="${data.index}" onclick="openSearchDialog(${data.index})" 
+    class="pokemon ${data.typeClass}">
       <img loading="lazy" src="${data.img}" data-id="card-image" class="img" alt="${data.name}">
       <p>${data.name}</p>
       <p>Type: ${data.typesArray.join(", ")}</p>
-    </div>
+      </button>
+    </li>
   `;
 }
 
