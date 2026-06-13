@@ -1,7 +1,7 @@
 /* @import url(./fonts.css); */
 
 @font-face {
-  font-family: 'Open-Sans';
+  font-family: 'Open Sans';
   font-weight: 400;
   src: url(./Open_Sans/OpenSans-VariableFont_wdth\,wght.ttf);
 }
@@ -222,6 +222,7 @@ p{
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  font-family: 'Open-Sans';
   font-size: 28px;
   font-weight: 700;
 }
