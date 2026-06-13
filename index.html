@@ -18,20 +18,20 @@
     </div>
         <div class="queryContainer">
           <button class="button" onclick="resetPokemon(1,20)">Reset</button>
-          <input placeholder="Nach Pokemon suchen" type="text" id="input" min-length="3" required>
+          <input placeholder="Nach Pokemon suchen" type="text" id="input" min-length="3" data-id="search-input" required>
           <button class="button" type="button" onclick="searchForPokemon(document.getElementById('input').value)">Search</button>
         </div>
         </div>
   </header>
-  <main class="pokemonContainer" id="pokemonContainerRef">
-    <dialog id="dialog" class="dialog"  onclick="closeDialog(event)">
-      <div id="dialogContainer" class="innerContainerDialog" onclick="event.stopPropagation()">
+  <main class="pokemonContainer" id="pokemonContainerRef" data-id="content">
+    <dialog id="dialog" class="dialog" data-id="dialog"  onclick="closeDialog(event)">
+      <div id="dialogContainer" data-id="overlay-pokemon-name" class="innerContainerDialog" onclick="event.stopPropagation()">
       </div>
 
     </dialog>
     <div id="showcase" class="gridContainer">
       </div>
-      <button id="loadBtn" class="loadBtn" onclick="loadMorePokemon()">↓</button>
+      <button id="loadBtn" class="loadBtn" onclick="loadMorePokemon()" data-id="load-more-button">↓</button>
       <div id="spinner" class="spinner hidden"></div>
     </main>
   <footer class="footer">
