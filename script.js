@@ -99,9 +99,9 @@ async function loadPokemonName(index){
 async function resetPokemon(){
   showCaseRef.classList.remove('singlePokemonContainer');
   showCaseRef.innerHTML = "";
- loadPokemon(1,20);
-  currentStart = 1;
-  dialogStop = 20;
+  
+  const html = loadedPokemon.map(p => createPokemonHTML(p)).join("");
+  showCaseRef.innerHTML = html;
   loadBtn.style.display = "block";
  
 }
@@ -163,7 +163,7 @@ async function regularFetch(cache, url, index){
   try {
     const response = await fetch(url);
     if (!response.ok) {
-      throw new Error("Fehler beim Fetch");
+      throw new Error("Error during fetch");
     }
     //The response needs to be cloned, since it can only be read once.
     await cache.put(url, response.clone());
@@ -223,9 +223,9 @@ async function loadPokemon(start, stop) {
         promises.push(getTestData(index));
       }}
   const allPokemon = await Promise.all(promises);
-  // loadedPokemon.push(...allPokemon);
-  loadedPokemon = allPokemon;
-   const html = loadedPokemon.map(p => createPokemonHTML(p)).join("");
+  loadedPokemon.push(...allPokemon);
+  // loadedPokemon = allPokemon;
+   const html = allPokemon.map(p => createPokemonHTML(p)).join("");
   showCaseRef.innerHTML += html;
   } catch (error) {
     console.log(error);
