@@ -142,6 +142,10 @@ a:hover{
 }
 
 .button{
+  border: 2px;
+  border-color: black;
+  padding: 4px;
+  border-radius: 10px;
   text-align: center;
   font-size: 24px;
 }
@@ -270,6 +274,18 @@ p{
   border: none;
 }
 
+button{
+  padding: 0;
+  border: 0;
+}
+
+.closeDialogBtn{
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-family: 'Open Sans';
+  font-size: 36px;
+}
 .inline{
   display: flex;
   justify-content: center;
@@ -299,7 +315,7 @@ p{
 
 /* Single Types */
 .normal{
-  background-color: rgb(255,255,255);
+  background-color: rgb(105,0,255);
 }
 .fire {
   background-color: #F08030;
@@ -495,6 +511,9 @@ p{
   .leftBtn{
     font-size: 24px;
     top: 50%;
+  }
+  .closeDialogBtn{
+    font-size: 24px;
   }
 }
 
