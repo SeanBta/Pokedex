@@ -25,22 +25,18 @@ let loadedPokemon = [];
 //Loading page with all the pokemon already loaded to avoid another request.
 let startingScreen;
 
-//Checks the search value from the input id.
 async function searchForPokemon(search) {
   showCaseRef.innerHTML = "";
-  showCaseRef.classList.remove('singlePokemonContainer');
-  if(search.length < 3){
-  openError();
   loadBtn.style.display = "none";
-  showCaseRef.classList.add('singlePokemonContainer');
-  return;
-  }
-  showLoadingSpinner();
-  let [filteredNumbers, filtered] = filterPokemon(search);
-  let numbers = filterNumber(filtered);
-  numbers.forEach(number => renderSinglePokemon(number));
-  removeLoadingSpinner();
-  return filtered;
+  let [filteredNumbers] = filterPokemon(search);
+
+  const pokemons = await Promise.all(
+    filteredNumbers.map(number => getTestData(number))
+  );
+
+  showCaseRef.innerHTML = pokemons
+    .map(pokemon => createPokemonHTMLSearchDialog(pokemon))
+    .join("");
 }
 
 //Filters the searched value. Checks if there are matches with all the pokemon names even with first letter uppercase or lowercase.
@@ -103,9 +99,6 @@ async function loadPokemonName(index){
 
 async function resetPokemon(){
   showCaseRef.innerHTML = "";
-  console.log(
-  loadedPokemon.map(p => p.index)
-);
   showCaseRef.classList.remove('singlePokemonContainer');
   inputRef.value = "";
   showCaseRef.innerHTML = startingScreen;
@@ -250,16 +243,17 @@ async function renderSinglePokemon(index) {
   inputRef.value = "";
   loadBtn.style.display = "none";
   let allPokemon = [];
+  let html;
   showLoadingSpinner();
-   let promises = [];
   try {
-    promises.push(getTestData(index));
-    const allPokemon = await Promise.all(promises);
-    const html = allPokemon.map(p => createPokemonHTMLSearchDialog(p)).join("");
-    showCaseRef.innerHTML += html;
+    let promises = [];
+    promises.push(await getTestData(index));
+    allPokemon = await Promise.all(promises);
+    html = allPokemon.map(p => createPokemonHTMLSearchDialog(p)).join("");
   } catch (error) {
     console.log(error);
   } finally {
+    showCaseRef.innerHTML += html;
     removeLoadingSpinner();
   }
 }
@@ -363,6 +357,7 @@ async function renderDialogSearchOneMatchFound(data){
    </p>
    </div>`
 }
+
 //Opens the dialog.
 async function openDialog(index){
   showLoadingSpinner();
