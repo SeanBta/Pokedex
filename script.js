@@ -25,15 +25,22 @@ let loadedPokemon = [];
 //Loading page with all the pokemon already loaded to avoid another request.
 let startingScreen;
 
+//Helper function to call the render function.
+function init(){
+ loadPokemon(1,20);
+ getAllPokemon();
+}
+
 async function searchForPokemon(search) {
   showCaseRef.innerHTML = "";
   loadBtn.style.display = "none";
-  let [filteredNumbers] = filterPokemon(search);
-
+  let [filteredNumbers, filtered] = filterPokemon(search);
+  if(filtered.length == 0){
+   return;
+  }
   const pokemons = await Promise.all(
     filteredNumbers.map(number => getTestData(number))
   );
-
   showCaseRef.innerHTML = pokemons
     .map(pokemon => createPokemonHTMLSearchDialog(pokemon))
     .join("");
@@ -42,6 +49,7 @@ async function searchForPokemon(search) {
 //Filters the searched value. Checks if there are matches with all the pokemon names even with first letter uppercase or lowercase.
 //Checks if no matches were found, then filters the index of the matching pokemon and returns the matching names.
 function filterPokemon(search){
+  showCaseRef.innerHTML = "";
   filteredNumbers = [];
     const searchedName = search.charAt(0).toUpperCase() + search.slice(1);
     let filtered = pokeNames.filter((name, index) =>
@@ -199,14 +207,6 @@ async function getData(data, index){
   const typeClass = getTypeClass(typesArray);
   return {name, img, typesArray, stats, index, symbolArray, typeClass};
 }
-
-//Helper function to call the render function.
-function init(){
- loadPokemon(1,20);
- getAllPokemon();
-}
-
-init();
 
 //Basic loading function for rendering the Pokemon.
 async function loadPokemon(start, stop) {
