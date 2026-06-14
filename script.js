@@ -22,6 +22,9 @@ let filteredNumbers = [];
 //All Pokemon that have actually been loaded
 let loadedPokemon = [];
 
+//Loading page with all the pokemon already loaded to avoid another request.
+let startingScreen;
+
 async function searchForPokemon(search) {
   showCaseRef.innerHTML = "";
   showCaseRef.classList.remove('singlePokemonContainer');
@@ -98,11 +101,15 @@ async function loadPokemonName(index){
 }
 
 async function resetPokemon(){
+  showCaseRef.innerHTML = "";
+  console.log(
+  loadedPokemon.map(p => p.index)
+);
   showCaseRef.classList.remove('singlePokemonContainer');
   inputRef.value = "";
 
-  const html = loadedPokemon.map(p => createPokemonHTML(p)).join("");
-  showCaseRef.innerHTML = html;
+  // const html = loadedPokemon.map(p => createPokemonHTML(p)).join("");
+  showCaseRef.innerHTML = startingScreen;
 
   loadBtn.style.display = "block";
 }
@@ -231,15 +238,13 @@ async function loadPokemon(start, stop) {
 async function renderPokemonContainer(promises){
   const allPokemon = await Promise.all(promises);
   loadedPokemon.push(...allPokemon);
-  const html = allPokemon.map(p => createPokemonHTML(p)).join("");
-  showCaseRef.innerHTML += html;
-}
-
-//Returns the html to render the pokemon
-async function renderPoke(promises){
-  const allPokemon = await Promise.all(promises);
-  const html = allPokemon.map(p => createPokemonHTML(p)).join("");
-  return html;
+  if(startingScreen == undefined || startingScreen == null){
+    startingScreen = allPokemon.map(p => createPokemonHTML(p)).join("");
+  }
+  else{
+     startingScreen += allPokemon.map(p => createPokemonHTML(p)).join("");
+  }
+  showCaseRef.innerHTML = startingScreen;
 }
 
 //Renders the single Pokemons. Used for searchPokemon().
