@@ -21,6 +21,7 @@ let filteredNumbers = [];
 
 //All Pokemon that have actually been loaded
 let loadedPokemon = [];
+
 async function searchForPokemon(search) {
   showCaseRef.innerHTML = "";
   showCaseRef.classList.remove('singlePokemonContainer');
@@ -98,12 +99,12 @@ async function loadPokemonName(index){
 
 async function resetPokemon(){
   showCaseRef.classList.remove('singlePokemonContainer');
-  showCaseRef.innerHTML = "";
   inputRef.value = "";
+
   const html = loadedPokemon.map(p => createPokemonHTML(p)).join("");
   showCaseRef.innerHTML = html;
+
   loadBtn.style.display = "block";
- 
 }
 
 //Invoked through the button on the bottom of the website. Renders 20 more Pokemon.
@@ -230,9 +231,10 @@ async function loadPokemon(start, stop) {
 async function renderPokemonContainer(promises){
   const allPokemon = await Promise.all(promises);
   loadedPokemon.push(...allPokemon);
-   const html = allPokemon.map(p => createPokemonHTML(p)).join("");
+  const html = allPokemon.map(p => createPokemonHTML(p)).join("");
   showCaseRef.innerHTML += html;
 }
+
 //Returns the html to render the pokemon
 async function renderPoke(promises){
   const allPokemon = await Promise.all(promises);
