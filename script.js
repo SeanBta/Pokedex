@@ -25,6 +25,7 @@ let loadedPokemon = [];
 //Loading page with all the pokemon already loaded to avoid another request.
 let startingScreen;
 
+//Checks the search value from the input id.
 async function searchForPokemon(search) {
   showCaseRef.innerHTML = "";
   showCaseRef.classList.remove('singlePokemonContainer');
@@ -95,9 +96,9 @@ async function returnFetch(prefix, index){
 
 //Returns the Name of the Pokemon with the first Letter written in Uppercase.
 async function loadPokemonName(index){
-    let response = await returnFetch('pokemon/', index);
-    let data = await response.json();
-    return capitalizeFirstLetter(data.name);
+  let response = await returnFetch('pokemon/', index);
+  let data = await response.json();
+  return capitalizeFirstLetter(data.name);
 }
 
 async function resetPokemon(){
@@ -107,10 +108,7 @@ async function resetPokemon(){
 );
   showCaseRef.classList.remove('singlePokemonContainer');
   inputRef.value = "";
-
-  // const html = loadedPokemon.map(p => createPokemonHTML(p)).join("");
   showCaseRef.innerHTML = startingScreen;
-
   loadBtn.style.display = "block";
 }
 
@@ -173,7 +171,6 @@ async function regularFetch(cache, url, index){
     if (!response.ok) {
       throw new Error("Error during fetch");
     }
-    //The response needs to be cloned, since it can only be read once.
     await cache.put(url, response.clone());
     const data = await response.json();
     return await getData(data, index);
@@ -235,6 +232,7 @@ async function loadPokemon(start, stop) {
   }
 }
 
+//Helper function for loadPokemon.
 async function renderPokemonContainer(promises){
   const allPokemon = await Promise.all(promises);
   loadedPokemon.push(...allPokemon);
@@ -279,6 +277,7 @@ function getTypeClass(types) {
   return "";
 }
 
+//Creates the regular html.
 function createPokemonHTML(data){
   return `
     <li><button id="${data.index}" class="pokemon ${data.typeClass}" data-id="card" 
@@ -290,6 +289,7 @@ function createPokemonHTML(data){
   `;
 }
 
+//Creates the html for the search container.
 function createPokemonHTMLSearchDialog(data){
   if(filteredNumbers.length <2){
     showCaseRef.classList.add('singlePokemonContainer');
@@ -323,6 +323,7 @@ async function renderDialog(data){
    </div>`
 }
 
+//Renders the dialog for the searching value.
 async function renderDialogSearch(data){
    if(filteredNumbers.length >1){
     return await renderDialogSearchMultipleMatches(data)
@@ -332,6 +333,7 @@ async function renderDialogSearch(data){
    }
 }
 
+//Renders the dialog for the matching search value if multiple matches were found.
 async function renderDialogSearchMultipleMatches(data){
    return `
   <div id="${data.index}" class="relative ${data.typeClass}">
