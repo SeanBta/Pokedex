@@ -99,7 +99,7 @@ async function loadPokemonName(index){
 async function resetPokemon(){
   showCaseRef.classList.remove('singlePokemonContainer');
   showCaseRef.innerHTML = "";
-  
+  inputRef.value = "";
   const html = loadedPokemon.map(p => createPokemonHTML(p)).join("");
   showCaseRef.innerHTML = html;
   loadBtn.style.display = "block";
@@ -187,8 +187,7 @@ async function getPokemonSymbolImg(urls) {
       await cache.put(url, response.clone());
       const data = await response.json();
       return data.sprites["generation-ix"]["scarlet-violet"].symbol_icon;
-    })
-  );
+    }));
 }
 
 async function getData(data, index){
@@ -198,7 +197,6 @@ async function getData(data, index){
   let typesArray = [];
   data.types.map((t) => typesArray.push(t.type.name[0].toUpperCase() + t.type.name.slice(1)) );
   let stats = data.stats.map((stat, index) => (data.stats[index].stat.name + ": " + data.stats[index].base_stat));
-  // let url = await getPokemonUrl(data);
   let symbolArray = await getPokemonSymbolImg(await getPokemonUrl(data));
   const typeClass = getTypeClass(typesArray);
   return {name, img, typesArray, stats, index, symbolArray, typeClass};
@@ -214,7 +212,6 @@ init();
 
 //Basic loading function for rendering the Pokemon.
 async function loadPokemon(start, stop) {
-  inputRef.value = "";
   showLoadingSpinner();
   try {
     let promises = [];
@@ -222,11 +219,7 @@ async function loadPokemon(start, stop) {
       if (index <= 150) {
         promises.push(getTestData(index));
       }}
-  const allPokemon = await Promise.all(promises);
-  loadedPokemon.push(...allPokemon);
-  // loadedPokemon = allPokemon;
-   const html = allPokemon.map(p => createPokemonHTML(p)).join("");
-  showCaseRef.innerHTML += html;
+  await renderPokemonContainer(promises);
   } catch (error) {
     console.log(error);
   } finally {
@@ -234,6 +227,12 @@ async function loadPokemon(start, stop) {
   }
 }
 
+async function renderPokemonContainer(promises){
+  const allPokemon = await Promise.all(promises);
+  loadedPokemon.push(...allPokemon);
+   const html = allPokemon.map(p => createPokemonHTML(p)).join("");
+  showCaseRef.innerHTML += html;
+}
 //Returns the html to render the pokemon
 async function renderPoke(promises){
   const allPokemon = await Promise.all(promises);
@@ -411,7 +410,6 @@ function dialogShowPreviousImg(index){
 
 function searchDialogShowPreviousImg(index) {
   const currentPos = filteredNumbers.indexOf(index);
-
   if (currentPos > 0) {
     openSearchDialog(filteredNumbers[currentPos - 1]);
   } else {
@@ -422,5 +420,6 @@ function searchDialogShowPreviousImg(index) {
 function openError(){
   showCaseRef.innerHTML = "Error! At least 3 letters required for search!";
   showCaseRef.innerHTML += `<div class="flex"><br><button onclick="resetPokemon()" class="resetButton">Reset pokemon</button></div>`;
+  inputRef.value = "";
   dialogRef.showModal();
 }
